@@ -13,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/marvel-rivals-reviews/players")
+@RequestMapping("/players")
 @RequiredArgsConstructor
 public class PlayerController {
 
