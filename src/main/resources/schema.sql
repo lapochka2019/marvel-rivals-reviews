@@ -4,4 +4,4 @@ CREATE TABLE IF NOT EXISTS player(
     owner VARCHAR(255),
     created TIMESTAMP NOT NULL,
     image VARCHAR(511)
-)
+);

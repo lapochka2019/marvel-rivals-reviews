@@ -1,4 +1,6 @@
-INSERT INTO players (nick_name, created) VALUES
+DELETE FROM player;
+
+INSERT INTO player (nick_name, created) VALUES
 ('Капитан Америка', TIMESTAMP '2025-08-20 10:30:00'),
 ('Капитан Марвел', TIMESTAMP '2025-08-20 11:00:00'),
 ('Халк', TIMESTAMP '2025-08-20 11:30:00'),
