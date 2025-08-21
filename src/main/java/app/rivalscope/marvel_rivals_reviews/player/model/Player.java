@@ -1,4 +1,4 @@
-package app.rivalscope.marvel_rivals_reviews.player;
+package app.rivalscope.marvel_rivals_reviews.player.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,8 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "player")
-@Builder
+@Table(name = "players")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Player {
 
@@ -25,7 +24,7 @@ public class Player {
     String nickName;
 
     @Column()
-    String owner;
+    Integer owner;
 
     @Column()
     LocalDateTime created;

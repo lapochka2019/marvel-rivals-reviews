@@ -2,7 +2,10 @@ package app.rivalscope.marvel_rivals_reviews.player.service;
 
 import app.rivalscope.marvel_rivals_reviews.exception.ConflictException;
 import app.rivalscope.marvel_rivals_reviews.exception.NotFoundException;
-import app.rivalscope.marvel_rivals_reviews.player.Player;
+import app.rivalscope.marvel_rivals_reviews.player.dto.PlayerCreateDto;
+import app.rivalscope.marvel_rivals_reviews.player.dto.PlayerMapper;
+import app.rivalscope.marvel_rivals_reviews.player.model.Player;
+import app.rivalscope.marvel_rivals_reviews.player.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -26,9 +29,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
+    private final PlayerMapper playerMapper;
 
     @Override
-    public Player create(Player player) {
+    public Player create(PlayerCreateDto playerCreateDto) {
+        Player player = playerMapper.toPlayer(playerCreateDto);
         log.info("Проверяем, нет ли игрока с ником: {}", player.getNickName());
         checkPlayerExistByNick(player.getNickName());
         player.setCreated(LocalDateTime.now());
@@ -60,9 +65,7 @@ public class PlayerServiceImpl implements PlayerService {
 
         if (player == null) {
             log.info("Игрок с Ником " + nick + " не найден");
-            player = create(Player.builder()
-                    .nickName(nick)
-                    .build());
+            player = create(new PlayerCreateDto(nick));
         }
         return player;
     }

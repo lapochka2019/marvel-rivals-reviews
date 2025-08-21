@@ -1,7 +1,9 @@
-package app.rivalscope.marvel_rivals_reviews.player.service;
+package app.rivalscope.marvel_rivals_reviews.player.controller;
 
 
-import app.rivalscope.marvel_rivals_reviews.player.Player;
+import app.rivalscope.marvel_rivals_reviews.player.dto.PlayerCreateDto;
+import app.rivalscope.marvel_rivals_reviews.player.model.Player;
+import app.rivalscope.marvel_rivals_reviews.player.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -21,7 +23,7 @@ public class PlayerController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Player create(@RequestBody Player player) {
+    public Player create(@RequestBody PlayerCreateDto player) {
         log.info("Запрос на создание игрока: {}", player);
         return service.create(player);
     }

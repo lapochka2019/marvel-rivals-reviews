@@ -1,6 +1,6 @@
-package app.rivalscope.marvel_rivals_reviews.player.service;
+package app.rivalscope.marvel_rivals_reviews.player.repository;
 
-import app.rivalscope.marvel_rivals_reviews.player.Player;
+import app.rivalscope.marvel_rivals_reviews.player.model.Player;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
