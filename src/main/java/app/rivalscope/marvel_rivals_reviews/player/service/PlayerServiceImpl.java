@@ -46,9 +46,9 @@ public class PlayerServiceImpl implements PlayerService {
     public Player updateImage(String nick, MultipartFile file) throws BadRequestException {
 
         log.info("Обрабатываем изображение");
-        String image = saveImage(file, nick);
+        String image = saveImage(nick, file);
 
-        log.info("Проверяем, нет ли игрока с ником: {}", nick);
+        log.info("Проверяем, есть ли игрок с ником: {}", nick);
         checkPlayerNotExistByNick(nick);
 
         Player player = playerRepository.findByNickNameIgnoreCase(nick);
@@ -83,21 +83,21 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public List<Player> getPlayers(int limit) {
-        if(limit==0){
+        if (limit == 0) {
             return playerRepository.findAll();
         }
         Pageable pageable = PageRequest.of(0, limit);
         return playerRepository.findAllByOrderByCreatedDesc(pageable);
     }
 
-    public String saveImage(MultipartFile file, String nick) throws BadRequestException {
+    public String saveImage(String nick, MultipartFile file) throws BadRequestException {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("Вы не загрузили файл");
         }
         try {
             String fileName = nick + "_image";
 
-            Path uploadDir = Paths.get("src/main/resources/static/uploads");
+            Path uploadDir = Paths.get("src/main/resources/static/uploads/players");
             if (!Files.exists(uploadDir)) {
                 Files.createDirectories(uploadDir);
             }
@@ -105,7 +105,7 @@ public class PlayerServiceImpl implements PlayerService {
             Path filePath = uploadDir.resolve(fileName);
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            return "/uploads/" + fileName;
+            return "/uploads/players/" + fileName;
         } catch (IOException e) {
             throw new BadRequestException("Во время загрузки изображения произошла ошибка");
         }

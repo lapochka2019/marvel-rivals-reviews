@@ -6,6 +6,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface PlayerMapper {
 
-    //@Mapping(target = "id", ignore = true)
     Player toPlayer(PlayerCreateDto playerCreateDto);
 }

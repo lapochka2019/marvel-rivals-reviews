@@ -29,7 +29,7 @@ public class Player {
     @Column()
     LocalDateTime created;
 
-    @Column(length = 511)
+    @Column(length = 512)
     String image;
 
 }
