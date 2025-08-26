@@ -16,6 +16,6 @@ public interface ReviewService {
 
     List<ReviewResponseWithPlayerDto> getReviewByUser (Long userId);
 
-    ArrangeData getMiddleRankByPlayer(Long playerId);
+    //ArrangeData getMiddleRankByPlayer(Long playerId);
 
 }

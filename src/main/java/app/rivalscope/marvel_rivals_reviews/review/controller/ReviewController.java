@@ -48,9 +48,9 @@ public class ReviewController {
         return service.getReviewByUser(userId);
     }
 
-    @GetMapping("/{reviewId}")
-    public ArrangeData getMiddleReviewsForPlayer(@PathVariable Long reviewId) {
-        log.info("Поиск отзывов об игроке c id: {}", reviewId);
-        return service.getMiddleRankByPlayer(reviewId);
-    }
+//    @GetMapping("/{reviewId}")
+//    public ArrangeData getMiddleReviewsForPlayer(@PathVariable Long reviewId) {
+//        log.info("Поиск отзывов об игроке c id: {}", reviewId);
+//        return service.getMiddleRankByPlayer(reviewId);
+//    }
 }

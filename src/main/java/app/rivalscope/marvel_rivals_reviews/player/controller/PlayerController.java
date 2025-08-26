@@ -2,6 +2,7 @@ package app.rivalscope.marvel_rivals_reviews.player.controller;
 
 
 import app.rivalscope.marvel_rivals_reviews.player.dto.PlayerCreateDto;
+import app.rivalscope.marvel_rivals_reviews.player.dto.PlayerDto;
 import app.rivalscope.marvel_rivals_reviews.player.model.Player;
 import app.rivalscope.marvel_rivals_reviews.player.service.PlayerService;
 import lombok.RequiredArgsConstructor;
@@ -23,19 +24,19 @@ public class PlayerController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Player create(@RequestBody PlayerCreateDto player) {
+    public PlayerDto create(@RequestBody PlayerCreateDto player) {
         log.info("Запрос на создание игрока: {}", player);
         return service.create(player);
     }
 
     @PatchMapping("/{nick}")
-    public Player update(@PathVariable String nick, @RequestParam("image") MultipartFile image) throws BadRequestException {
+    public PlayerDto update(@PathVariable String nick, @RequestParam("image") MultipartFile image) throws BadRequestException {
         log.info("Запрос на обновление изображения игрока c Ником: {}", nick);
         return service.updateImage(nick, image);
     }
 
     @GetMapping("/nick/{nick}")
-    public Player getPlayerByNick(@PathVariable String nick) {
+    public PlayerDto getPlayerByNick(@PathVariable String nick) {
         log.info("Запрос на получение игрока c Ником: {}", nick);
         return service.getPlayerByNick(nick);
     }

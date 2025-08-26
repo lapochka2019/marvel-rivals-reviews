@@ -97,14 +97,6 @@ public class ReviewServiceImpl implements ReviewService {
                 .toList();
     }
 
-    @Override
-    public ArrangeData getMiddleRankByPlayer(Long playerId) {
-        Double avgRank = reviewRepository.findAverageRankLast30DaysByPlayerId(playerId, LocalDateTime.now().minusDays(30)).orElse(Double.valueOf(0));
-        Double avgGrade = reviewRepository.findAverageGradeLast30DaysByPlayerId(playerId, LocalDateTime.now().minusDays(30)).orElse(Double.valueOf(0));
-
-        return new ArrangeData(avgRank, avgGrade);
-    }
-
     public String saveImage(Long reviewId, MultipartFile file) throws BadRequestException {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("Вы не загрузили файл");

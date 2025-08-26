@@ -1,9 +1,13 @@
 package app.rivalscope.marvel_rivals_reviews.player.repository;
 
+import app.rivalscope.marvel_rivals_reviews.player.dto.PlayerStats;
 import app.rivalscope.marvel_rivals_reviews.player.model.Player;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PlayerRepository extends JpaRepository<Player, Long> {
@@ -16,6 +20,5 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     List<Player> findByNickNameContainingIgnoreCase(String nickName);
 
     List<Player> findAllByOrderByCreatedDesc(Pageable pageable);
-
 
 }

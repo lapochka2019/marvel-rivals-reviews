@@ -3,9 +3,12 @@ package app.rivalscope.marvel_rivals_reviews.player.service;
 import app.rivalscope.marvel_rivals_reviews.exception.ConflictException;
 import app.rivalscope.marvel_rivals_reviews.exception.NotFoundException;
 import app.rivalscope.marvel_rivals_reviews.player.dto.PlayerCreateDto;
+import app.rivalscope.marvel_rivals_reviews.player.dto.PlayerDto;
 import app.rivalscope.marvel_rivals_reviews.player.dto.PlayerMapper;
 import app.rivalscope.marvel_rivals_reviews.player.model.Player;
 import app.rivalscope.marvel_rivals_reviews.player.repository.PlayerRepository;
+import app.rivalscope.marvel_rivals_reviews.review.dto.ArrangeData;
+import app.rivalscope.marvel_rivals_reviews.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -29,21 +32,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
+    private final ReviewRepository reviewRepository;
     private final PlayerMapper playerMapper;
 
     @Override
-    public Player create(PlayerCreateDto playerCreateDto) {
+    public PlayerDto create(PlayerCreateDto playerCreateDto) {
         Player player = playerMapper.toPlayer(playerCreateDto);
         log.info("Проверяем, нет ли игрока с ником: {}", player.getNickName());
         checkPlayerExistByNick(player.getNickName());
         player.setCreated(LocalDateTime.now());
         Player newPlayer = playerRepository.save(player);
         log.info("Создан игрок: {}", newPlayer);
-        return newPlayer;
+        return playerMapper.toPlayerDto(newPlayer, new ArrangeData(0.0, 0.0));
     }
 
     @Override
-    public Player updateImage(String nick, MultipartFile file) throws BadRequestException {
+    public PlayerDto updateImage(String nick, MultipartFile file) throws BadRequestException {
 
         log.info("Обрабатываем изображение");
         String image = saveImage(nick, file);
@@ -54,20 +58,23 @@ public class PlayerServiceImpl implements PlayerService {
         Player player = playerRepository.findByNickNameIgnoreCase(nick);
         player.setImage(image);
         log.info("Обновленный игрок: {}", player);
-        return player;
 
+        ArrangeData arrangeData = getMiddleRankByPlayer(player.getId());
+        return playerMapper.toPlayerDto(player, arrangeData);
     }
 
     @Override
-    public Player getPlayerByNick(String nick) {
+    public PlayerDto getPlayerByNick(String nick) {
         Player player;
         player = playerRepository.findByNickNameIgnoreCase(nick);
 
         if (player == null) {
             log.info("Игрок с Ником " + nick + " не найден");
-            player = create(new PlayerCreateDto(nick));
+            return create(new PlayerCreateDto(nick));
         }
-        return player;
+
+        ArrangeData arrangeData = getMiddleRankByPlayer(player.getId());
+        return playerMapper.toPlayerDto(player, arrangeData);
     }
 
     @Override
@@ -77,7 +84,7 @@ public class PlayerServiceImpl implements PlayerService {
         if (players == null) {
             throw new NotFoundException("Игроков с Ником " + substring + " не найдено");
         }
-        log.info("Найден игрок: {}", players);
+        log.info("Найдены игроки: {}", players);
         return players;
     }
 
@@ -121,5 +128,12 @@ public class PlayerServiceImpl implements PlayerService {
         if (!playerRepository.existsByNickNameIgnoreCase(nick)) {
             throw new NotFoundException("Игрок с Ником " + nick + " не найден");
         }
+    }
+
+    public ArrangeData getMiddleRankByPlayer(Long playerId) {
+        Double avgRank = reviewRepository.findAverageRankLast30DaysByPlayerId(playerId, LocalDateTime.now().minusDays(30)).orElse(Double.valueOf(0));
+        Double avgGrade = reviewRepository.findAverageGradeLast30DaysByPlayerId(playerId, LocalDateTime.now().minusDays(30)).orElse(Double.valueOf(0));
+
+        return new ArrangeData(avgRank, avgGrade);
     }
 }
